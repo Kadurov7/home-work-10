@@ -1,13 +1,17 @@
-
+import React from 'react';
 import './App.css';
 import TodoList from './components/todo-list/TodoList';
-
+import { ContextPravider } from './store/ContextTodo';
 
 function App() {
   return (
-    <div>
+    <>
+     <ContextPravider>
+       <div>
       <TodoList/>
     </div>
+    </ContextPravider>
+    </>
   );
 }
 

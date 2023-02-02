@@ -1,7 +1,7 @@
-import React, { useEffect, useReducer, useState } from 'react'
+import React, {useContext } from 'react'
 import styled from "styled-components"
 import TodoItem from '../todo-item/TodoItem';
-
+import { ContextTodo } from '../../store/ContextTodo';
 
 export const ACTION = {
     ISTODO_ADD:"add-todo",
@@ -9,70 +9,9 @@ export const ACTION = {
     ISDELETE_TODO:"delete-todo"
 };
 
-
- const reduser = (todos, action) =>{
-   switch (action.type) {
-     case ACTION.ISTODO_ADD:
-         return [...todos, newTodo(action.payload.name)]
-      case ACTION.ISCOMPLETE_TODO:
-         return todos.map((todo)=>{
-             if(todo.id === action.payload.id) {
-                 return {...todo, complete: !todo.complete };
-             }
-             return todo;
-         })
-         case ACTION.ISDELETE_TODO:
-             return todos.filter((todo)=> todo.id !== action.payload.id);        
-             default:
-                 return todos;
-   }
- }
- 
-const newTodo = (name) =>{
-  return {
-    id: Math.random() + new Date().getMilliseconds().toString(),
-    name: name,
-    complete: false
-  }
-}
-
-
 const TodoList = () => {
    
-  const [isLocal, setIsLocal] = useState(false)
-
-  useEffect(()=>{
-   const result = localStorage.getItem("SOS");
-   setIsLocal(Boolean(result))
-  },[])
-    // //////////////////////////////
-    const [todos, dispatch] = useReducer(reduser,[
-        {
-            id: Math.random() + new Date().getMilliseconds().toString(),
-            name: "Amazon",
-            complete:false,
-        },
-    ]);
-
-    const [title, setTitle] = useState("")
-    const enebled = title.length > 0
-   
-    const submitHandler = (event)=>{
-    event.preventDefault();
-    dispatch({ type: ACTION.ISTODO_ADD, payload: { name: title} });
-    todos.filter((item)=> item.id === todos.id);
-    setTitle("")
-     setIsLocal(false)
-     localStorage.setItem("SOS", JSON.stringify(true))
-    }
-    
-   
-
-     const editHandler = (name, id)=>{
-        setTitle(name)
-        dispatch({ type: ACTION.ISDELETE_TODO, payload: { id: id} })
-        
-     };
+ const {title, setTitle, submitHandler, todos} = useContext(ContextTodo);
 
   return (
     <>
@@ -83,15 +22,13 @@ const TodoList = () => {
           placeholder='テキストを入力.....'
           onChange={(e)=> setTitle(e.target.value)}/>
 
-        <Button onClick={submitHandler} disabled={!enebled}>追加</Button>
+        <Button onClick={submitHandler}>追加</Button>
         </Form>
         {todos.map((todo)=> {
             return (
                 <div key={todo.id}>
                     <TodoItem
                     todo={todo}
-                    dispatch={dispatch}
-                    editHandler={editHandler}
                     />
                 </div>
             )

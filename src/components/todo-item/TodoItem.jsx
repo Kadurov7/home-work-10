@@ -1,10 +1,13 @@
-import React, { useState } from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components';
+import { ContextTodo } from '../../store/ContextTodo';
 import { ACTION } from '../todo-list/TodoList';
 
 
 
-const TodoItem = ({todo, dispatch, editHandler}) => {
+const TodoItem = ({todo}) => {
+
+ const {dispatch, editHandler} = useContext(ContextTodo)
 
   return (
      <Container>
